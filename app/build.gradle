@@ -96,6 +96,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
+
+    // Paging
+    implementation 'androidx.paging:paging-compose:1.0.0-alpha14'
 }
 
 def getLocalProperty(String key) {
