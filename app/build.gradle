@@ -26,11 +26,13 @@ android {
         debug {
             minifyEnabled false
             buildConfigField("String", "TMDB_API_KEY", getLocalProperty("TMDB_API_KEY"))
+            buildConfigField("String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\"")
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField("String", "TMDB_API_KEY", getLocalProperty("TMDB_API_KEY"))
+            buildConfigField("String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\"")
         }
     }
     compileOptions {
