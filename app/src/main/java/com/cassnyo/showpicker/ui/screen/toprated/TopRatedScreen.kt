@@ -1,5 +1,9 @@
 package com.cassnyo.showpicker.ui.screen.toprated
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +38,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -67,20 +70,53 @@ fun TopRatedScreen(
             }
         )
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (isLoading && tvShows.isEmpty()) {
-                FirstPageLoad(
-                    modifier = Modifier.align(BiasAlignment(horizontalBias = 0f, verticalBias = -0.50f))
-                )
-            }
-
-            TopRatedTvShows(
-                tvShowList = tvShows,
-                onTvShowClick = {},
-                onLoadMore = { viewModel.loadTopRatedTvShows() },
+        Box {
+            // AnimatedVisibility doesn't fit well with BoxScope (it forces you to use a fully qualified
+            // name), so I decided to wrap them in a new Composable
+            ListContainer(
+                isLoading = isLoading,
+                tvShows = tvShows,
+                onTvShowClick = {
+                    // TODO
+                },
+                onLoadMore = {
+                    viewModel.loadTopRatedTvShows()
+                },
                 viewMode = viewMode
             )
         }
+    }
+}
+
+@ExperimentalFoundationApi
+@Composable
+private fun ListContainer(
+    isLoading: Boolean,
+    tvShows: List<TvShow>,
+    onTvShowClick: (TvShow) -> Unit,
+    onLoadMore: () -> Unit,
+    viewMode: ViewMode
+) {
+    AnimatedVisibility(
+        visible = isLoading && tvShows.isEmpty(),
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        // We need to specify modifier.fillMaxSize() to prevent this composable from
+        // moving when it is fading out
+        FirstPageLoad(modifier = Modifier.fillMaxSize())
+    }
+
+    AnimatedVisibility(
+        visible = tvShows.isNotEmpty(),
+        enter = slideInVertically { it } + fadeIn()
+    ) {
+        TopRatedTvShows(
+            tvShowList = tvShows,
+            onTvShowClick = onTvShowClick,
+            onLoadMore = onLoadMore,
+            viewMode = viewMode
+        )
     }
 }
 
@@ -122,7 +158,7 @@ private fun FirstPageLoad(
     PrettyLoading(
         message = stringResource(id = R.string.top_rated_loading),
         size = 80.dp,
-        modifier = modifier
+        modifier = modifier.padding(top = 180.dp)
     )
 }
 
