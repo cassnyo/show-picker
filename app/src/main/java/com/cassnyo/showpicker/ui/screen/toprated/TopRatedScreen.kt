@@ -56,13 +56,11 @@ import com.skydoves.landscapist.glide.GlideImage
 fun TopRatedScreen(
     viewModel: TopRatedViewModel = viewModel()
 ) {
-    val tvShows by viewModel.tvShows.collectAsState(emptyList())
-    val viewMode by viewModel.viewMode.collectAsState(ViewMode.List)
-    val isLoading by viewModel.isLoading.collectAsState(false)
+    val uiState = viewModel.uiState
 
     Column(modifier = Modifier.fillMaxSize()) {
         Header(
-            viewMode = viewMode,
+            viewMode = uiState.viewMode,
             onModeSelected = { selectedMode ->
                 viewModel.toggleViewMode(selectedMode)
             }
@@ -72,15 +70,15 @@ fun TopRatedScreen(
             // AnimatedVisibility doesn't fit well with BoxScope (it forces you to use a fully qualified
             // name), so I decided to wrap them in a new Composable
             ListContainer(
-                isLoading = isLoading,
-                tvShows = tvShows,
+                isLoading = uiState.isLoading,
+                tvShows = uiState.tvShows,
                 onTvShowClick = {
                     // TODO
                 },
                 onLoadMore = {
                     viewModel.loadTopRatedTvShows()
                 },
-                viewMode = viewMode
+                viewMode = uiState.viewMode
             )
         }
     }
