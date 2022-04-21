@@ -1,24 +1,16 @@
 package com.cassnyo.showpicker.data.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import com.cassnyo.showpicker.data.paging.TopRatedTvShowPagingSource
+import com.cassnyo.showpicker.data.mapper.mapTvShowResponseToTvShow
+import com.cassnyo.showpicker.data.network.TmdbApi
 import com.cassnyo.showpicker.ui.model.TvShow
-import kotlinx.coroutines.flow.Flow
 
 class TvShowRepository(
-    private val topRatedTvShowPagingSource: TopRatedTvShowPagingSource
+    private val tmdbApi: TmdbApi
 ) {
 
-    fun getTopRatedTvShows(): Flow<PagingData<TvShow>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = 20,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = { topRatedTvShowPagingSource }
-        ).flow
+    suspend fun getTopRatedTvShows(page: Int): List<TvShow> {
+        val response = tmdbApi.getTopRatedTvShows("en-US", page)
+        return mapTvShowResponseToTvShow(response.results)
     }
 
 }

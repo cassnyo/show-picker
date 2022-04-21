@@ -1,7 +1,6 @@
 package com.cassnyo.showpicker.data.di
 
 import com.cassnyo.showpicker.data.network.TmdbApi
-import com.cassnyo.showpicker.data.paging.TopRatedTvShowPagingSource
 import com.cassnyo.showpicker.data.repository.TvShowRepository
 import dagger.Module
 import dagger.Provides
@@ -15,18 +14,10 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideTopRatedTvShowPagingSource(
-        tmdbApi: TmdbApi
-    ): TopRatedTvShowPagingSource {
-        return TopRatedTvShowPagingSource(tmdbApi)
-    }
-
-    @Provides
-    @Singleton
     fun provideTvShowRepository(
-        topRatedTvShowPagingSource: TopRatedTvShowPagingSource
+        tmdbApi: TmdbApi
     ): TvShowRepository {
-        return TvShowRepository(topRatedTvShowPagingSource)
+        return TvShowRepository(tmdbApi)
     }
 
 }

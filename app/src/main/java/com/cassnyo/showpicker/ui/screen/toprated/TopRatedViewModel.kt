@@ -1,9 +1,8 @@
 package com.cassnyo.showpicker.ui.screen.toprated
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.cassnyo.showpicker.data.repository.TvShowRepository
 import com.cassnyo.showpicker.ui.model.TvShow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,8 +16,8 @@ class TopRatedViewModel @Inject constructor(
     private val tvShowRepository: TvShowRepository
 ): ViewModel() {
 
-    private val _tvShows = MutableStateFlow<PagingData<TvShow>>(PagingData.empty())
-    val tvShows: Flow<PagingData<TvShow>> = _tvShows
+    private val _tvShows = MutableStateFlow<List<TvShow>>(emptyList())
+    val tvShows: Flow<List<TvShow>> = _tvShows
 
     private val _viewMode = MutableStateFlow<ViewMode>(ViewMode.List)
     val viewMode: Flow<ViewMode> = _viewMode
@@ -26,15 +25,21 @@ class TopRatedViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: Flow<Boolean> = _isLoading
 
+    private var currentPage = 0
+
     init {
+        loadTopRatedTvShows()
+    }
+
+    fun loadTopRatedTvShows() {
+        _isLoading.value = true
+        currentPage += 1
         viewModelScope.launch {
-            tvShowRepository
-                .getTopRatedTvShows()
-                .cachedIn(viewModelScope)
-                .collect { pagingData ->
-                    _tvShows.value = pagingData
-                    _isLoading.value = false
-                }
+            val tvShows = tvShowRepository.getTopRatedTvShows(currentPage)
+            _tvShows.value = _tvShows.value.toMutableList().apply {
+                addAll(tvShows)
+            }
+            _isLoading.value = false
         }
     }
 
