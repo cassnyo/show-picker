@@ -18,3 +18,9 @@ val ColorOnSurface = Color(0xFF1b1b1d)
 
 val ColorError = Color(0xFFba1b1b)
 val ColorOnError = Color(0xFFffffff)
+
+val ColorStarFull = Color(0xFFFDD835)
+val ColorStarEmpty = Color(0xFF444444)
+
+val ColorTvShowCardContainer = Color(0xFFd3e3ff)
+val ColorTvShowCardOnContainer = Color(0xFF001b3c)
