@@ -22,7 +22,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -35,6 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cassnyo.showpicker.R
+import com.cassnyo.showpicker.ui.common.PrettyLoading
 import com.cassnyo.showpicker.ui.common.RatingBar
 import com.cassnyo.showpicker.ui.model.TvShow
 import com.cassnyo.showpicker.ui.theme.ColorTvShowCardContainer
@@ -58,7 +59,7 @@ fun TopRatedScreen(
     val viewMode by viewModel.viewMode.collectAsState(ViewMode.List)
     val isLoading by viewModel.isLoading.collectAsState(false)
 
-    Column {
+    Column(modifier = Modifier.fillMaxSize()) {
         Header(
             viewMode = viewMode,
             onModeSelected = { selectedMode ->
@@ -66,9 +67,11 @@ fun TopRatedScreen(
             }
         )
 
-        Box {
-            if (isLoading) {
-                Loading()
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (isLoading && tvShows.isEmpty()) {
+                FirstPageLoad(
+                    modifier = Modifier.align(BiasAlignment(horizontalBias = 0f, verticalBias = -0.50f))
+                )
             }
 
             TopRatedTvShows(
@@ -79,7 +82,6 @@ fun TopRatedScreen(
             )
         }
     }
-
 }
 
 @Composable
@@ -114,9 +116,13 @@ fun Header(
 }
 
 @Composable
-fun Loading() {
-    CircularProgressIndicator(
-        modifier = Modifier.fillMaxSize()
+private fun FirstPageLoad(
+    modifier: Modifier = Modifier
+) {
+    PrettyLoading(
+        message = stringResource(id = R.string.top_rated_loading),
+        size = 80.dp,
+        modifier = modifier
     )
 }
 
