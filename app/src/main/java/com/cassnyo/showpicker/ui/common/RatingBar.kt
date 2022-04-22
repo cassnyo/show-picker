@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.cassnyo.showpicker.ui.theme.ColorStarEmpty
 import com.cassnyo.showpicker.ui.theme.ColorStarFull
@@ -24,9 +25,14 @@ fun RatingBarPreview() {
 }
 
 @Composable
-fun RatingBar(rating: Float) {
-    val starSize = 16.dp
+fun RatingBar(
+    rating: Float,
+    modifier: Modifier = Modifier,
+    starSize: Dp = 16.dp,
+    displayValue: Boolean = true
+) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         (0 until 5).forEach { index ->
@@ -39,11 +45,13 @@ fun RatingBar(rating: Float) {
 
         Spacer(modifier = Modifier.size(4.dp))
 
-        Text(
-            text = rating.toString(),
-            style = MaterialTheme.typography.caption,
-            fontWeight = FontWeight.ExtraBold
-        )
+        if (displayValue) {
+            Text(
+                text = rating.toString(),
+                style = MaterialTheme.typography.caption,
+                fontWeight = FontWeight.ExtraBold
+            )
+        }
     }
 }
 
