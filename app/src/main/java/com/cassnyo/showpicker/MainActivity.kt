@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.cassnyo.showpicker.ui.common.navigation.NavigationRoutes
 import com.cassnyo.showpicker.ui.screen.detail.DetailScreen
 import com.cassnyo.showpicker.ui.screen.toprated.TopRatedScreen
 import com.cassnyo.showpicker.ui.theme.ShowPickerTheme
@@ -30,10 +31,10 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = "topRated"
+                        startDestination = NavigationRoutes.TOP_RATED
                     ) {
-                        composable("topRated") { TopRatedScreen(navController) }
-                        composable("detail") { DetailScreen(navController) }
+                        composable(NavigationRoutes.TOP_RATED) { TopRatedScreen(navController) }
+                        composable(NavigationRoutes.DETAIL) { DetailScreen(navController) }
                     }
                 }
             }
