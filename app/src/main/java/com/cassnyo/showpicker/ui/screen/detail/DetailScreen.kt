@@ -40,6 +40,7 @@ import androidx.navigation.NavController
 import com.cassnyo.showpicker.R
 import com.cassnyo.showpicker.ui.common.RatingBar
 import com.cassnyo.showpicker.ui.model.TvShow
+import com.cassnyo.showpicker.ui.theme.ColorBackground
 import com.cassnyo.showpicker.ui.theme.ColorTvShowCardContainer
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -63,7 +64,9 @@ fun DetailScreen(
     val pagerState = rememberPagerState()
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(ColorBackground)
     ) {
         Header(
             onBackClick = { navController.navigateUp() },
@@ -211,7 +214,8 @@ private fun TvShowDetail(
                     )
                     ColumnDetail(
                         title = stringResource(R.string.detail_title_country),
-                        value = tvShow.originCountry.firstOrNull() ?: stringResource(R.string.detail_country_placeholder)
+                        value = tvShow.originCountry.firstOrNull()
+                            ?: stringResource(R.string.detail_country_placeholder)
                     )
                     ColumnDetail(
                         title = stringResource(R.string.detail_title_language),
