@@ -8,6 +8,7 @@ data class TvShow(
     val overview: String,
     val posterUrl: String?,
     val backdropUrl: String?,
+    val contentUrl: String,
     val firstAirDate: LocalDate?,
     val popularity: Float,
     val voteCount: Int,

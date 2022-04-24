@@ -1,5 +1,7 @@
 package com.cassnyo.showpicker.ui.screen.detail
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +22,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -27,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -40,7 +44,9 @@ import com.cassnyo.showpicker.ui.theme.ColorTvShowCardContainer
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerScope
+import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
+import com.google.accompanist.pager.rememberPagerState
 import com.skydoves.landscapist.glide.GlideImage
 import java.util.Locale
 import kotlin.math.absoluteValue
@@ -53,16 +59,22 @@ fun DetailScreen(
     val viewModel: DetailViewModel = hiltViewModel()
     val uiState = viewModel.uiState
     val tvShows = uiState.tvShows
+    val context = LocalContext.current
+    val pagerState = rememberPagerState()
 
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         Header(
-            onBackClick = { navController.navigateUp() }
+            onBackClick = { navController.navigateUp() },
+            onShareClick = {
+                shareTvShow(tvShows[pagerState.currentPage], context)
+            }
         )
         if (tvShows.isNotEmpty()) {
             TvShowPager(
                 tvShows = tvShows,
+                state = pagerState,
                 onLoadMore = { viewModel.loadSimilarTvShows() }
             )
         }
@@ -72,19 +84,28 @@ fun DetailScreen(
 @Composable
 private fun Header(
     onBackClick: () -> Unit,
+    onShareClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onBackClick) {
                 Icon(
                     imageVector = Icons.Rounded.ArrowBack,
                     contentDescription = "Back",
                     modifier = Modifier.size(36.dp)
+                )
+            }
+            IconButton(onClick = onShareClick) {
+                Icon(
+                    imageVector = Icons.Rounded.Share,
+                    contentDescription = "Share"
                 )
             }
         }
@@ -95,13 +116,14 @@ private fun Header(
 @Composable
 private fun TvShowPager(
     tvShows: List<TvShow>,
+    state: PagerState,
     onLoadMore: () -> Unit
 ) {
     HorizontalPager(
         count = tvShows.size,
         contentPadding = PaddingValues(32.dp),
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        state = state,
     ) { page ->
         if (page == tvShows.size - 1) {
             LaunchedEffect(Unit) { onLoadMore() }
@@ -246,3 +268,12 @@ private fun ColumnDetail(
     }
 }
 
+private fun shareTvShow(tvShow: TvShow, context: Context) {
+    val intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, tvShow.contentUrl)
+        type = "text/plain"
+    }
+
+    context.startActivity(intent)
+}
