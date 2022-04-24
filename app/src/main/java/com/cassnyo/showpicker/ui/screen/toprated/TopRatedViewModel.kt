@@ -51,6 +51,10 @@ class TopRatedViewModel @Inject constructor(
         )
     }
 
+    fun onTvShowClick(selectedTvShow: TvShow) {
+        tvShowRepository.selectedTvShow = selectedTvShow
+    }
+
 }
 
 sealed class ViewMode {

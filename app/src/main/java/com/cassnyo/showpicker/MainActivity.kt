@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.cassnyo.showpicker.ui.screen.detail.DetailScreen
 import com.cassnyo.showpicker.ui.screen.toprated.TopRatedScreen
 import com.cassnyo.showpicker.ui.theme.ShowPickerTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +25,14 @@ class MainActivity : ComponentActivity() {
             ShowPickerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-                    TopRatedScreen()
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController = navController,
+                        startDestination = "topRated"
+                    ) {
+                        composable("topRated") { TopRatedScreen(navController) }
+                        composable("detail") { DetailScreen(navController) }
+                    }
                 }
             }
         }

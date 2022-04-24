@@ -42,7 +42,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.cassnyo.showpicker.R
 import com.cassnyo.showpicker.ui.common.PrettyLoading
 import com.cassnyo.showpicker.ui.common.RatingBar
@@ -54,8 +55,9 @@ import com.skydoves.landscapist.glide.GlideImage
 @ExperimentalFoundationApi
 @Composable
 fun TopRatedScreen(
-    viewModel: TopRatedViewModel = viewModel()
+    navController: NavController
 ) {
+    val viewModel: TopRatedViewModel = hiltViewModel()
     val uiState = viewModel.uiState
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -72,8 +74,9 @@ fun TopRatedScreen(
             ListContainer(
                 isLoading = uiState.isLoading,
                 tvShows = uiState.tvShows,
-                onTvShowClick = {
-                    // TODO
+                onTvShowClick = { selectedTvShow ->
+                    viewModel.onTvShowClick(selectedTvShow)
+                    navController.navigate("detail")
                 },
                 onLoadMore = {
                     viewModel.loadTopRatedTvShows()
