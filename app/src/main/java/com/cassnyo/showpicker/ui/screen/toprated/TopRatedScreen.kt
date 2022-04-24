@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -293,11 +294,13 @@ fun TvShowListItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClick(tvShow) },
-        backgroundColor = ColorTvShowCardContainer
+            .clickable { onClick(tvShow) }
     ) {
         Row(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                // Card background doesn't work properly if the color has transparency
+                .background(ColorTvShowCardContainer)
+                .padding(16.dp)
         ) {
             // First half - poster
             GlideImage(

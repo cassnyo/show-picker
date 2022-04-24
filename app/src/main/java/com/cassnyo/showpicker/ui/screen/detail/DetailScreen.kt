@@ -147,9 +147,11 @@ private fun TvShowDetail(
     Card(
         modifier = modifier
             .fillMaxSize()
-            .background(ColorTvShowCardContainer)
     ) {
-        Column {
+        Column(
+            // Card background doesn't work properly if the color has transparency
+            modifier = Modifier.background(ColorTvShowCardContainer)
+        ) {
             Backdrop(backdropUrl = tvShow.backdropUrl)
 
             Column(
