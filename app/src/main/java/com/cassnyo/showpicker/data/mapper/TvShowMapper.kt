@@ -4,23 +4,20 @@ import com.cassnyo.showpicker.BuildConfig
 import com.cassnyo.showpicker.data.network.model.TvShowResponse
 import com.cassnyo.showpicker.ui.model.TvShow
 
-fun mapTvShowResponseToTvShow(tvShowList: List<TvShowResponse>): List<TvShow> {
-    return tvShowList.map { tvShowResponse ->
-        TvShow(
-            tvShowResponse.id,
-            tvShowResponse.name,
-            tvShowResponse.overview,
-            mapPosterPathToUrl(tvShowResponse.posterPath),
-            mapBackdropPathToUrl(tvShowResponse.backdropPath),
-            createContentUrl(tvShowResponse.id),
-            tvShowResponse.firstAirDate,
-            tvShowResponse.popularity,
-            tvShowResponse.voteCount,
-            tvShowResponse.voteAverage,
-            tvShowResponse.originCountry,
-            tvShowResponse.originalLanguage
-        )
-    }
-}
+fun TvShowResponse.mapToTvShow(): TvShow =
+    TvShow(
+        id,
+        name,
+        overview,
+        mapPosterPathToUrl(posterPath),
+        mapBackdropPathToUrl(backdropPath),
+        createContentUrl(id),
+        firstAirDate,
+        popularity,
+        voteCount,
+        voteAverage,
+        originCountry,
+        originalLanguage
+    )
 
 private fun createContentUrl(id: Int) = "${BuildConfig.TMDB_CONTENT_URL}tv/$id"

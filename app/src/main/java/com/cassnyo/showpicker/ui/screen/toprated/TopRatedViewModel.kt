@@ -9,6 +9,7 @@ import com.cassnyo.showpicker.data.repository.TvShowRepository
 import com.cassnyo.showpicker.ui.model.TvShow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,22 +23,35 @@ class TopRatedViewModel @Inject constructor(
         val viewMode: ViewMode = ViewMode.List
     )
 
-    private var currentPage = 0
     var uiState by mutableStateOf(UiState())
         private set
+
+    private var nextPage = 1
+    private var totalPages: Int? = null
 
     init {
         loadTopRatedTvShows()
     }
 
     fun loadTopRatedTvShows() {
-        currentPage += 1
         viewModelScope.launch {
+            val maxPage = totalPages
+            if (maxPage != null && nextPage > maxPage) {
+                Timber.d("Reached last page")
+                return@launch
+            }
+
             uiState = uiState.copy(isLoading = true)
-            val tvShows = tvShowRepository.getTopRatedTvShows(currentPage)
-            val currentTvShows = uiState.tvShows.toMutableList()
+
+            val pagedResult = tvShowRepository.getTopRatedTvShows(nextPage)
+            nextPage = pagedResult.page + 1
+            totalPages = pagedResult.totalPages
+            val tvShows = uiState.tvShows.toMutableList().apply {
+                addAll(pagedResult.data)
+            }
+
             uiState = uiState.copy(
-                tvShows = currentTvShows.apply { addAll(tvShows) },
+                tvShows = tvShows,
                 isLoading = false
             )
         }
