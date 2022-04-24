@@ -1,4 +1,4 @@
-package com.cassnyo.showpicker.ui.common
+package com.cassnyo.showpicker.ui.common.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column

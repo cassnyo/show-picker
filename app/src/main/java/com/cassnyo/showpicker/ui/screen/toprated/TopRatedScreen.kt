@@ -46,8 +46,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.cassnyo.showpicker.R
-import com.cassnyo.showpicker.ui.common.PrettyLoading
-import com.cassnyo.showpicker.ui.common.RatingBar
+import com.cassnyo.showpicker.ui.common.component.PrettyLoading
+import com.cassnyo.showpicker.ui.common.component.RatingBar
 import com.cassnyo.showpicker.ui.common.navigation.NavigationRoutes
 import com.cassnyo.showpicker.ui.model.TvShow
 import com.cassnyo.showpicker.ui.theme.ColorTvShowCardContainer
