@@ -42,6 +42,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerScope
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.skydoves.landscapist.glide.GlideImage
+import java.util.Locale
 import kotlin.math.absoluteValue
 
 @ExperimentalPagerApi
@@ -189,6 +190,10 @@ private fun TvShowDetail(
                     ColumnDetail(
                         title = stringResource(R.string.detail_title_country),
                         value = tvShow.originCountry.firstOrNull() ?: stringResource(R.string.detail_country_placeholder)
+                    )
+                    ColumnDetail(
+                        title = stringResource(R.string.detail_title_language),
+                        value = Locale(tvShow.originalLanguage).displayLanguage
                     )
                 }
 
