@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Show Picker</string>
     <string name="top_rated_loading">Loading top rated Tv Shows</string>
+
+    <string name="detail_title_year">Year</string>
+    <string name="detail_title_country">Country</string>
+    <string name="detail_country_placeholder">-</string>
 </resources>

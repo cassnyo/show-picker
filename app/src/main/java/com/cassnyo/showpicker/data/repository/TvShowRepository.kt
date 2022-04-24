@@ -18,4 +18,9 @@ class TvShowRepository(
         return mapTvShowResponseToTvShow(response.results)
     }
 
+    suspend fun getSimilarTvShows(tvShowId: Int, page: Int): List<TvShow> {
+        val response = tmdbApi.getSimilarTvShows(tvShowId, "en-US", page)
+        return mapTvShowResponseToTvShow(response.results)
+    }
+
 }

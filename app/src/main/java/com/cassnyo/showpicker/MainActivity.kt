@@ -14,8 +14,10 @@ import androidx.navigation.compose.rememberNavController
 import com.cassnyo.showpicker.ui.screen.detail.DetailScreen
 import com.cassnyo.showpicker.ui.screen.toprated.TopRatedScreen
 import com.cassnyo.showpicker.ui.theme.ShowPickerTheme
+import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalPagerApi
 @ExperimentalFoundationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

@@ -89,6 +89,7 @@ dependencies {
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    implementation "androidx.compose.ui:ui-util:$compose_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
@@ -103,6 +104,9 @@ dependencies {
 
     // Navigation
     implementation "androidx.navigation:navigation-compose:2.4.2"
+
+    // HorizontalPager
+    implementation "com.google.accompanist:accompanist-pager:0.23.1"
 }
 
 def getLocalProperty(String key) {
