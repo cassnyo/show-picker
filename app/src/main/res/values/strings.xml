@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Show Picker</string>
+
     <string name="top_rated_loading">Loading top rated Tv Shows</string>
+    <string name="top_rated_error">Han error has occurred. Please try again.</string>
+    <string name="top_rated_retry">Retry</string>
 
     <string name="detail_title_year">Year</string>
     <string name="detail_title_country">Country</string>

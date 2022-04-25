@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +27,7 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -39,6 +41,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -75,14 +78,14 @@ fun TopRatedScreen(
             // name), so I decided to wrap them in a new Composable
             ListContainer(
                 isLoading = uiState.isLoading,
+                isError = uiState.isError,
                 tvShows = uiState.tvShows,
                 onTvShowClick = { selectedTvShow ->
                     viewModel.onTvShowClick(selectedTvShow)
                     navController.navigate(NavigationRoutes.DETAIL)
                 },
-                onLoadMore = {
-                    viewModel.loadTopRatedTvShows()
-                },
+                onLoadMore = { viewModel.loadTopRatedTvShows() },
+                onRetryClick = { viewModel.loadTopRatedTvShows() },
                 viewMode = uiState.viewMode
             )
         }
@@ -93,9 +96,11 @@ fun TopRatedScreen(
 @Composable
 private fun ListContainer(
     isLoading: Boolean,
+    isError: Boolean,
     tvShows: List<TvShow>,
     onTvShowClick: (TvShow) -> Unit,
     onLoadMore: () -> Unit,
+    onRetryClick: () -> Unit,
     viewMode: ViewMode
 ) {
     AnimatedVisibility(
@@ -106,6 +111,17 @@ private fun ListContainer(
         // We need to specify modifier.fillMaxSize() to prevent this composable from
         // moving when it is fading out
         FirstPageLoad(modifier = Modifier.fillMaxSize())
+    }
+
+    AnimatedVisibility(
+        visible = !isLoading && isError && tvShows.isEmpty(),
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        FirstPageError(
+            onRetryClick = onRetryClick,
+            modifier = Modifier.fillMaxSize()
+        )
     }
 
     AnimatedVisibility(
@@ -161,6 +177,31 @@ private fun FirstPageLoad(
         size = 80.dp,
         modifier = modifier.padding(top = 180.dp)
     )
+}
+
+@Composable
+private fun FirstPageError(
+    onRetryClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(R.drawable.bg_error),
+            contentDescription = "Error",
+            modifier = Modifier
+                .fillMaxWidth(0.4f)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = stringResource(R.string.top_rated_error))
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(onClick = onRetryClick) {
+            Text(text = stringResource(R.string.top_rated_retry))
+        }
+    }
 }
 
 @Composable

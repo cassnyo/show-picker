@@ -20,6 +20,7 @@ class TopRatedViewModel @Inject constructor(
     data class UiState(
         val tvShows: List<TvShow> = emptyList(),
         val isLoading: Boolean = false,
+        val isError: Boolean = false,
         val viewMode: ViewMode = ViewMode.List
     )
 
@@ -40,20 +41,27 @@ class TopRatedViewModel @Inject constructor(
                 Timber.d("Reached last page")
                 return@launch
             }
+            uiState = uiState.copy(isLoading = true, isError = false)
 
-            uiState = uiState.copy(isLoading = true)
+            try {
+                val pagedResult = tvShowRepository.getTopRatedTvShows(nextPage)
+                nextPage = pagedResult.page + 1
+                totalPages = pagedResult.totalPages
+                val tvShows = uiState.tvShows.toMutableList().apply {
+                    addAll(pagedResult.data)
+                }
 
-            val pagedResult = tvShowRepository.getTopRatedTvShows(nextPage)
-            nextPage = pagedResult.page + 1
-            totalPages = pagedResult.totalPages
-            val tvShows = uiState.tvShows.toMutableList().apply {
-                addAll(pagedResult.data)
+                uiState = uiState.copy(
+                    tvShows = tvShows,
+                    isLoading = false
+                )
+            } catch (e: Exception) {
+                Timber.e("Error loading top rated: ${e.message}")
+                uiState = uiState.copy(
+                    isLoading = false,
+                    isError = true
+                )
             }
-
-            uiState = uiState.copy(
-                tvShows = tvShows,
-                isLoading = false
-            )
         }
     }
 

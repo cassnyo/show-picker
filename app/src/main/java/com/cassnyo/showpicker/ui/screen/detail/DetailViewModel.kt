@@ -40,15 +40,19 @@ class DetailViewModel @Inject constructor(
                 return@launch
             }
 
-            val pagedResult = tvShowRepository.getSimilarTvShows(selectedTvShow.id, nextPage)
-            nextPage = pagedResult.page + 1
-            totalPages = pagedResult.totalPages
+            try {
+                val pagedResult = tvShowRepository.getSimilarTvShows(selectedTvShow.id, nextPage)
+                nextPage = pagedResult.page + 1
+                totalPages = pagedResult.totalPages
 
-            val tvShows = uiState.tvShows.toMutableList().apply {
-                addAll(pagedResult.data)
+                val tvShows = uiState.tvShows.toMutableList().apply {
+                    addAll(pagedResult.data)
+                }
+
+                uiState = uiState.copy(tvShows = tvShows)
+            } catch (e: Exception) {
+                Timber.e("Error loading similar: ${e.message}")
             }
-
-            uiState = uiState.copy(tvShows = tvShows)
         }
     }
 
