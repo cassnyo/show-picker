@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -38,6 +37,8 @@ import androidx.compose.ui.util.lerp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.cassnyo.showpicker.R
+import com.cassnyo.showpicker.ui.common.component.ImageLoadError
+import com.cassnyo.showpicker.ui.common.component.ImageLoading
 import com.cassnyo.showpicker.ui.common.component.RatingBar
 import com.cassnyo.showpicker.ui.model.TvShow
 import com.cassnyo.showpicker.ui.theme.ColorBackground
@@ -244,11 +245,8 @@ private fun Backdrop(
             .fillMaxWidth()
             .fillMaxHeight(0.3f)
             .shadow(2.dp),
-        loading = {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
+        loading = { ImageLoading() },
+        failure = { ImageLoadError(64.dp) }
     )
 }
 

@@ -49,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.cassnyo.showpicker.R
+import com.cassnyo.showpicker.ui.common.component.ImageLoadError
+import com.cassnyo.showpicker.ui.common.component.ImageLoading
 import com.cassnyo.showpicker.ui.common.component.PrettyLoading
 import com.cassnyo.showpicker.ui.common.component.RatingBar
 import com.cassnyo.showpicker.ui.common.navigation.NavigationRoutes
@@ -301,14 +303,12 @@ fun TvShowGridItem(
             .fillMaxWidth()
             .clickable { onClick(tvShow) }
     ) {
-        GlideImage(
-            imageModel = tvShow.posterUrl,
-            modifier = Modifier
-                .size(
-                    width = 140.dp,
-                    height = 200.dp
-                )
-                .clip(RoundedCornerShape(size = 4.dp))
+        PosterImage(
+            posterUrl = tvShow.posterUrl,
+            modifier = Modifier.size(
+                width = 140.dp,
+                height = 200.dp
+            )
         )
 
         Spacer(modifier = Modifier.height(2.dp))
@@ -345,14 +345,12 @@ fun TvShowListItem(
                 .padding(16.dp)
         ) {
             // First half - poster
-            GlideImage(
-                imageModel = tvShow.posterUrl,
-                modifier = Modifier
-                    .size(
-                        width = 80.dp,
-                        height = 120.dp
-                    )
-                    .clip(RoundedCornerShape(size = 4.dp))
+            PosterImage(
+                posterUrl = tvShow.posterUrl,
+                modifier = Modifier.size(
+                    width = 80.dp,
+                    height = 120.dp
+                )
             )
 
             // Second half - name + vote average
@@ -385,4 +383,17 @@ fun TvShowListItem(
             }
         }
     }
+}
+
+@Composable
+private fun PosterImage(
+    posterUrl: String?,
+    modifier: Modifier = Modifier
+) {
+    GlideImage(
+        imageModel = posterUrl,
+        modifier = modifier.clip(RoundedCornerShape(size = 4.dp)),
+        loading = { ImageLoading() },
+        failure = { ImageLoadError(48.dp) }
+    )
 }
